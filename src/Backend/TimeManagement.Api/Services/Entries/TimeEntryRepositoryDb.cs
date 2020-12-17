@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeManagement.Api.Context.TimeManagement;
+using TimeManagement.Api.Exceptions;
 using TimeManagement.BL.Entries;
 using TimeManagement.BL.Services;
 
@@ -122,13 +123,21 @@ namespace TimeManagement.Api.Services.Entries
 
         public async Task<TimeEntry> GetAsync(string entryId)
         {
-            return await _context.TimeEntries.FirstOrDefaultAsync(e => e.Id == entryId);
+            var item = await _context.TimeEntries.FirstOrDefaultAsync(e => e.Id == entryId);
+            if (item == null)
+            {
+                throw new TimeEntryNotFoundException(entryId);
+            }
+            return item;
         }
 
         public async Task<TimeEntry> UpdateAsync(string entryId, TimeEntry entry)
         {
             var dbEntry = await GetAsync(entryId);
+            dbEntry.UserId = entry.UserId;
+            dbEntry.Date = entry.Date;
             dbEntry.Time = entry.Time;
+            dbEntry.EntryType = entry.EntryType;
             dbEntry.LastModified = DateTime.Now;
             dbEntry.LastModifierId = entry.LastModifierId;
 
@@ -146,20 +155,10 @@ namespace TimeManagement.Api.Services.Entries
                 await _context.SaveChangesAsync();
                 result = true;
             }
-            catch (DbUpdateConcurrencyException e)
-            {
-                _logger.LogError(e, "Could not save changes to context");
-                result = false;
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogError(e, "Could not save changes to context");
-                result = false;
-            }
             catch (Exception e)
             {
                 _logger.LogError(e, "Could not save changes to context");
-                throw;
+                throw new PersistencyException(e);
             }
             return result;
         }
