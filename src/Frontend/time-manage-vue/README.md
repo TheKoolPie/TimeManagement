@@ -1,4 +1,4 @@
-# timemanagementvue
+# time-manage-vue
 
 ## Project setup
 ```
