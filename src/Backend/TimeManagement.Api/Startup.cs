@@ -112,6 +112,17 @@ namespace TimeManagementApi
                 });
             });
 
+            services.AddCors(o =>
+            {
+                o.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    });
+            });
+
             services.AddTransient<ICurrentUserProvider, CurrentUserFromHttpContext>();
             services.AddTransient<ITimeEntryRepository, TimeEntryRepositoryDb>();
         }
@@ -126,10 +137,11 @@ namespace TimeManagementApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TimeManagementApi v1"));
             }
-
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
