@@ -124,6 +124,7 @@ namespace TimeManagementApi
             });
 
             services.AddTransient<ICurrentUserProvider, CurrentUserFromHttpContext>();
+            services.AddTransient<IUserRepository, UserRepositoryDb>();
             services.AddTransient<ITimeEntryRepository, TimeEntryRepositoryDb>();
         }
 
