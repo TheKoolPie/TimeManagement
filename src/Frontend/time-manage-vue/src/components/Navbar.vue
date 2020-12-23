@@ -13,11 +13,12 @@
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <a
-                href="#"
-                class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                >Dashboard</a
+              <router-link
+                to="/"
+                class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium"
               >
+                Dashboard
+              </router-link>
             </div>
           </div>
         </div>
@@ -54,7 +55,6 @@
                   @click="
                     isLargeUserProfileMenuOpen = !isLargeUserProfileMenuOpen
                   "
-                  @blur="isLargeUserProfileMenuOpen = false"
                 >
                   <span class="sr-only">Open user menu</span>
                   <svg
@@ -99,6 +99,7 @@
                   >
                   <a
                     href="#"
+                    @click="logoutUser"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                     >Sign out</a
@@ -156,31 +157,12 @@
     <div :class="isMobileMenuOpen ? 'block' : 'hidden'" class="md:hidden">
       <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-        <a
-          href="#"
+        <router-link
+          to="/"
           class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium"
-          >Dashboard</a
         >
-        <a
-          href="#"
-          class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >Team</a
-        >
-        <a
-          href="#"
-          class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >Projects</a
-        >
-        <a
-          href="#"
-          class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >Calendar</a
-        >
-        <a
-          href="#"
-          class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >Reports</a
-        >
+          Dashboard
+        </router-link>
       </div>
       <div class="pt-4 pb-3 border-t border-gray-700">
         <div class="flex items-center px-5">
@@ -199,10 +181,10 @@
           </div>
           <div class="ml-3">
             <div class="text-base font-medium leading-none text-white">
-              Tom Cook
+              {{ account.user.username }}
             </div>
             <div class="text-sm font-medium leading-none text-gray-400">
-              tom@example.com
+              {{ account.user.email }}
             </div>
           </div>
           <button
@@ -240,6 +222,7 @@
           >
           <a
             href="#"
+            @click="logoutUser"
             class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
             >Sign out</a
           >
@@ -249,10 +232,22 @@
   </nav>
 </template>
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   data: () => ({
     isLargeUserProfileMenuOpen: false,
     isMobileMenuOpen: false
-  })
+  }),
+  computed: {
+    ...mapState({
+      account: state => state.account
+    })
+  },
+  methods: {
+    ...mapActions('account', {
+      logoutUser: 'logout'
+    })
+  }
 }
 </script>

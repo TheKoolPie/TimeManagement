@@ -74,6 +74,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+
 export default {
   data () {
     return {
@@ -84,9 +85,6 @@ export default {
   },
   computed: {
     ...mapState('account', ['status'])
-  },
-  created () {
-    this.logout()
   },
   methods: {
     ...mapActions('account', ['login', 'logout']),
