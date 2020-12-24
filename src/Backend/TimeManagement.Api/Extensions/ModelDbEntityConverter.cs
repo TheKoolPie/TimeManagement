@@ -9,7 +9,6 @@ namespace TimeManagement.Api.Extensions
         {
             return new TimeEntry
             {
-                UserId = model.UserId,
                 Date = model.Date,
                 Time = model.Time,
                 EntryType = model.EntryType
