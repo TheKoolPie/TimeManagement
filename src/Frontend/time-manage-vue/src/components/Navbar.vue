@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-gray-800">
+  <nav class="bg-gray-800" v-click-outside="hideSmallUserProfile">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center">
@@ -46,7 +46,10 @@
               </svg>
             </button>
             <!--Profile dropdown-->
-            <div class="ml-3 relative">
+            <div
+              class="ml-3 relative"
+              v-click-outside="hideLargeUserProfile"
+            >
               <div>
                 <button
                   class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
@@ -247,7 +250,13 @@ export default {
   methods: {
     ...mapActions('account', {
       logoutUser: 'logout'
-    })
+    }),
+    hideLargeUserProfile () {
+      this.isLargeUserProfileMenuOpen = false
+    },
+    hideSmallUserProfile () {
+      this.isMobileMenuOpen = false
+    }
   }
 }
 </script>
