@@ -32,8 +32,10 @@ namespace TimeManagement.Api.Services.Entries
                 {
                     UserId = entry.UserId,
                     Date = entry.Date,
-                    CreatedAt = DateTime.Now,
-                    LastModified = DateTime.Now,
+                    CreatorId = entry.CreatorId,
+                    CreatedAt = entry.CreatedAt,
+                    LastModifierId = entry.LastModifierId,
+                    LastModified = entry.LastModified,
                     Time = entry.Time,
                     EntryType = entry.EntryType
                 };

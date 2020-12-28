@@ -95,21 +95,25 @@ namespace TimeManagement.Api.Controllers
                         if (year > 0)
                         {
                             _logger.LogDebug($"Found value for year '{year}'");
-                            result.Entries = await _timeEntryRepository.GetAllOfUserAsync(userId, month, day, year);
+                            result.Entries = (await _timeEntryRepository.GetAllOfUserAsync(userId, month, day, year))
+                                .Select(e => e.ToResponseModel());
                         }
                         else
                         {
-                            result.Entries = await _timeEntryRepository.GetAllOfUserAsync(userId, month, day);
+                            result.Entries = (await _timeEntryRepository.GetAllOfUserAsync(userId, month, day))
+                                .Select(e => e.ToResponseModel());
                         }
                     }
                     else
                     {
-                        result.Entries = await _timeEntryRepository.GetAllOfUserAsync(userId, month);
+                        result.Entries = (await _timeEntryRepository.GetAllOfUserAsync(userId, month))
+                            .Select(e => e.ToResponseModel());
                     }
                 }
                 else
                 {
-                    result.Entries = await _timeEntryRepository.GetAllOfUserAsync(userId);
+                    result.Entries = (await _timeEntryRepository.GetAllOfUserAsync(userId))
+                        .Select(e => e.ToResponseModel());
 
                 }
             }
@@ -154,14 +158,18 @@ namespace TimeManagement.Api.Controllers
             {
                 UserId = userId,
                 Date = model.Date,
-                Time = model.Time,
+                CreatorId = currentUser.Id,
+                CreatedAt = DateTime.Now,
+                LastModifierId = currentUser.Id,
+                LastModified = DateTime.Now,
+                Time = new TimeSpan(model.Hours, model.Minutes, model.Seconds),
                 EntryType = model.EntryType
             };
             try
             {
                 var created = await _timeEntryRepository.CreateAsync(dbEntry);
                 result.IsSuccess = true;
-                result.Entries = new List<TimeEntry> { created };
+                result.Entries = new List<TimeEntryModel> { created.ToResponseModel() };
             }
             catch (PersistencyException e)
             {
@@ -197,9 +205,13 @@ namespace TimeManagement.Api.Controllers
 
             try
             {
-                var updatedItem = await _timeEntryRepository.UpdateAsync(entryId, model.ToDbEntity());
+                var dbEntity = model.ToDbEntity();
+                dbEntity.LastModifierId = currentUser.Id;
+                dbEntity.LastModified = DateTime.Now;
+
+                var updatedItem = await _timeEntryRepository.UpdateAsync(entryId, dbEntity);
                 result.IsSuccess = true;
-                result.Entries = new List<TimeEntry> { updatedItem };
+                result.Entries = new List<TimeEntryModel> { updatedItem.ToResponseModel() };
             }
             catch (PersistencyException e)
             {

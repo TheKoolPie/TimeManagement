@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using TimeManagement.BL.Entries;
+using TimeManagement.Api.Models.Entries;
 
 namespace TimeManagement.Api.Response
 {
     public class TimeEntryResponse : BaseResponse
     {
-        public IEnumerable<TimeEntry> Entries { get; set; }
+        public IEnumerable<TimeEntryModel> Entries { get; set; }
     }
 }

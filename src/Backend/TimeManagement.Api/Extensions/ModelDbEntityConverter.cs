@@ -10,8 +10,19 @@ namespace TimeManagement.Api.Extensions
             return new TimeEntry
             {
                 Date = model.Date,
-                Time = model.Time,
+                Time = new System.TimeSpan(model.Hours, model.Minutes, model.Seconds),
                 EntryType = model.EntryType
+            };
+        }
+        public static TimeEntryModel ToResponseModel(this TimeEntry dbEntry)
+        {
+            return new TimeEntryModel
+            {
+                Date = dbEntry.Date,
+                EntryType = dbEntry.EntryType,
+                Hours = dbEntry.Time.Hours,
+                Minutes = dbEntry.Time.Minutes,
+                Seconds = dbEntry.Time.Seconds
             };
         }
     }
