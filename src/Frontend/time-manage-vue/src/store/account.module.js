@@ -1,13 +1,13 @@
-import { userService } from '../services/user.service'
+import { authService } from '../services/auth.service'
 
 const user = JSON.parse(localStorage.getItem('user'))
 const state = user ? { status: { loggedIn: true }, user } : { status: {}, user: null }
 
 const actions = {
-  login ({ dispatch, commit }, { username, password }) {
+  login({ dispatch, commit }, { username, password }) {
     commit('loginRequest', { username })
 
-    userService.login(username, password)
+    authService.login(username, password)
       .then(
         user => {
           commit('loginSuccess', user)
@@ -18,25 +18,25 @@ const actions = {
         }
       )
   },
-  logout ({ commit }) {
-    userService.logout()
+  logout({ commit }) {
+    authService.logout()
     commit('logout')
   }
 }
 const mutations = {
-  loginRequest (state, user) {
+  loginRequest(state, user) {
     state.status = { loggingIn: true }
     state.user = user
   },
-  loginSuccess (state, user) {
+  loginSuccess(state, user) {
     state.status = { loggedIn: true }
     state.user = user
   },
-  loginFailure (state) {
+  loginFailure(state) {
     state.status = {}
     state.user = null
   },
-  logout (state) {
+  logout(state) {
     state.status = {}
     state.user = null
   }

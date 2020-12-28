@@ -1,18 +1,15 @@
-import { TimeSpan } from "./TimeSpan";
-
 export class TimeEntryModel {
     date;
-    time;
+    hours;
+    minutes;
+    seconds;
     entryType;
 
-    constructor(entryType) {
-        this.date = new Date();
-        this.time = new TimeSpan(this.date);
-        this.entryType = entryType;
-    }
-    constructor(year, month, date, hours, minutes, seconds, entryType) {
-        this.date = new Date(year, month, date);
-        this.time = new TimeSpan(hours, minutes, seconds);
+    constructor(timeStamp, entryType){
+        this.date = timeStamp;
+        this.hours = this.date.getHours();
+        this.minutes = this.date.getMinutes();
+        this.seconds = this.date.getSeconds();
         this.entryType = entryType;
     }
 }
