@@ -4,7 +4,7 @@
     <header class="bg-white shadow">
       <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold leading-tight text-gray-900">
-          {{ pageTitle }}
+          {{ pageTitle }} - {{ currentDate }}
         </h1>
       </div>
     </header>
@@ -19,10 +19,21 @@
 import Navbar from './Navbar.vue'
 export default {
   props: {
-    pageTitle: String
+    pageTitle: String,
+  },
+  data() {
+    return {
+      currentDate: '',
+    }
+  },
+  created() {
+    const today = new Date()
+    this.currentDate = `${today.getDate()}.${
+      today.getMonth() + 1
+    }.${today.getFullYear()}`
   },
   components: {
-    Navbar
-  }
+    Navbar,
+  },
 }
 </script>

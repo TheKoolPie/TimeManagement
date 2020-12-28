@@ -5,7 +5,8 @@ export const timeService = {
     getTimeEntriesOfMonth,
     getTimeEntriesOfMonthAndDay,
     getTimeEntriesOfDate,
-    createTimeEntry
+    createTimeEntry,
+    getTimeEntriesOfToday
 }
 
 function getTimeEntries() {
@@ -39,6 +40,10 @@ function getTimeEntriesOfDate(month, day, year) {
     }
     return fetch(`${process.env.VUE_APP_ROOT_API}/api/timeEntry/${month}/${day}/${year}`, o)
         .then(authService.handleApiResponse)
+}
+function getTimeEntriesOfToday() {
+    const today = new Date()
+    return getTimeEntriesOfDate(today.getMonth() + 1, today.getDate(), today.getFullYear())
 }
 
 function createTimeEntry(timeEntryModel) {
