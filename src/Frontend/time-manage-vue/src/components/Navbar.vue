@@ -46,10 +46,7 @@
               </svg>
             </button>
             <!--Profile dropdown-->
-            <div
-              class="ml-3 relative"
-              v-click-outside="hideLargeUserProfile"
-            >
+            <div class="ml-3 relative" v-click-outside="hideLargeUserProfile">
               <div>
                 <button
                   class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
@@ -251,10 +248,10 @@ export default {
     ...mapActions('account', {
       logoutUser: 'logout'
     }),
-    hideLargeUserProfile () {
+    hideLargeUserProfile() {
       this.isLargeUserProfileMenuOpen = false
     },
-    hideSmallUserProfile () {
+    hideSmallUserProfile() {
       this.isMobileMenuOpen = false
     }
   }

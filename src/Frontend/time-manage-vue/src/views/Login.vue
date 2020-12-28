@@ -76,7 +76,7 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
-  data () {
+  data() {
     return {
       username: '',
       password: '',
@@ -88,7 +88,7 @@ export default {
   },
   methods: {
     ...mapActions('account', ['login', 'logout']),
-    handleSubmit (e) {
+    handleSubmit(e) {
       this.submitted = true
       const { username, password } = this
       if (username && password) {
