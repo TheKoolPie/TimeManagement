@@ -1,12 +1,12 @@
 import { authService } from '../services/auth.service'
 
 const user = JSON.parse(localStorage.getItem('user'))
-const state = user ? { status: { loggedIn: true }, user } : { status: {}, user: null }
+const state = user ?
+  { status: { loggedIn: true }, user } :
+  { status: { loggedIn: false }, user: null }
 
 const actions = {
   login({ dispatch, commit }, { username, password }) {
-    commit('loginRequest', { username })
-
     authService.login(username, password)
       .then(
         user => {
@@ -14,7 +14,6 @@ const actions = {
         },
         error => {
           commit('loginFailure', error)
-          dispatch('alert/error', error, { root: true })
         }
       )
   },
@@ -24,20 +23,16 @@ const actions = {
   }
 }
 const mutations = {
-  loginRequest(state, user) {
-    state.status = { loggingIn: true }
-    state.user = user
-  },
   loginSuccess(state, user) {
     state.status = { loggedIn: true }
     state.user = user
   },
   loginFailure(state) {
-    state.status = {}
+    state.status = { loggedIn: false }
     state.user = null
   },
   logout(state) {
-    state.status = {}
+    state.status = { loggedIn: false }
     state.user = null
   }
 }

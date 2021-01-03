@@ -245,9 +245,11 @@ export default {
     })
   },
   methods: {
-    ...mapActions('account', {
-      logoutUser: 'logout'
-    }),
+    ...mapActions('account', ['logout']),
+    logoutUser() {
+      this.logout()
+      location.reload()
+    },
     hideLargeUserProfile() {
       this.isLargeUserProfileMenuOpen = false
     },

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="flex items-center justify-between justify-between px-4 py-5 sm:px-6"
+      class="flex items-center justify-between sm:px-6"
     >
       <div>
         <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -34,13 +34,13 @@
     </div>
     <div class="border-t border-gray-200">
       <dl>
-        <div class="bg-gray-50 px-4 py-5 grid grid-cols-3 gap-4">
+        <div class="px-4 py-5 grid grid-cols-3 gap-4">
           <dt class="font-medium text-gray-500">Coming</dt>
           <dd class="mt-1 text-gray-900">
             {{ comingTime }}
           </dd>
         </div>
-        <div class="bg-white px-4 py-5 grid grid-cols-3 gap-4">
+        <div class="px-4 py-5 grid grid-cols-3 gap-4">
           <dt class="font-medium text-gray-500">Going</dt>
           <dd class="mt-1 text-gray-900">
             {{ goingTime }}
@@ -52,13 +52,14 @@
 </template>
 <script>
 import { TimeEntryType } from '../../models/enums/TimeEntryType'
-import { timeService } from '../../services/time.service'
+import { timeService, dateTimeFormatService } from '../../services'
+
 export default {
   data() {
     return {
       currentDate: '',
       comingTime: '',
-      goingTime: '',
+      goingTime: ''
     }
   },
   created() {
@@ -66,13 +67,17 @@ export default {
   },
   methods: {
     getEntriesOfToday() {
-      timeService.getTimeEntriesOfToday().then((data) => {
+      timeService.getTimeEntriesOfToday().then(data => {
         if (data && data.isSuccess) {
           if (data.entries && data.entries.length > 0) {
             const entries = data.entries
             for (var i = 0; i < entries.length; i++) {
               const entry = entries[i]
-              const timeString = `${entry.hours}:${entry.minutes}:${entry.seconds}`
+              const timeString = dateTimeFormatService.getTimeString(
+                entry.hours,
+                entry.minutes,
+                entry.seconds
+              )
               if (entry.entryType === TimeEntryType.COMING) {
                 this.comingTime = timeString
               } else if (entry.entryType === TimeEntryType.GOING) {
@@ -82,7 +87,7 @@ export default {
           }
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>

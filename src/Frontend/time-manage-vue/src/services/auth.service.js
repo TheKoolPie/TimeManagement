@@ -1,5 +1,3 @@
-import router from '../router'
-
 export const authService = {
     login,
     logout,
@@ -28,15 +26,16 @@ function login(username, password) {
                             token: user.token
                         }
                         localStorage.setItem('user', JSON.stringify(userData))
-                        router.push('/')
                     })
             }
             return user
+        },
+        error => {
+            return Promise.reject(error)
         })
 }
 function logout() {
     localStorage.removeItem('user')
-    router.push('/login')
 }
 
 function getAuthHeader() {
@@ -64,9 +63,8 @@ function handleApiResponse(response) {
         if (!response.ok) {
             if (response.status === 401) {
                 logout()
-                location.reload()
             }
-            const error = (data & data.message) || response.statusText
+            const error = data ? data.message : response.statusText
             return Promise.reject(error)
         }
         return data

@@ -1,4 +1,5 @@
 const state = {
+  isSuccessful: false,
   type: null,
   message: null
 }
@@ -17,14 +18,17 @@ const actions = {
 
 const mutations = {
   success(state, message) {
+    state.isSuccessful = true
     state.type = 'success'
     state.message = message
   },
   error(state, message) {
+    state.isSuccessful = false
     state.type = 'error'
     state.message = message
   },
   clear(state) {
+    state.isSuccessful = false
     state.type = null
     state.message = null
   }

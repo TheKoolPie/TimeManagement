@@ -1,14 +1,12 @@
 <template>
   <div>
-    <div v-if="(isComingEntryAvailable && isGoingEntryAvailable)">
-      <div class="m-3">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">
-          Times for today already booked
-        </h3>
-      </div>
+    <div v-if="isComingEntryAvailable && isGoingEntryAvailable">
+      <h3 class="text-center text-lg leading-6 font-medium text-gray-900">
+        Times for today already booked
+      </h3>
     </div>
     <div v-else>
-      <div class="m-3 sm:mt-0 sm:ml-4 sm:text-left">
+      <div class="sm:text-left">
         <h3 class="text-lg leading-6 font-medium text-gray-900">
           Book time for today
         </h3>
@@ -27,7 +25,7 @@
           type="button"
           :disabled="isComingEntryAvailable"
           :class="{
-            'hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500': !isComingEntryAvailable,
+            'hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500': !isComingEntryAvailable
           }"
           class="disabled:opacity-50 sm:mr-2 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white"
           @click="createComingEntry"
@@ -38,7 +36,7 @@
           type="button"
           :disabled="isGoingEntryAvailable"
           :class="{
-            'hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500': !isGoingEntryAvailable,
+            'hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500': !isGoingEntryAvailable
           }"
           class="disabled:opacity-50 mt-3 sm:mt-0 sm:ml-2 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white"
           @click="createGoingEntry"
@@ -52,14 +50,15 @@
 <script>
 import { TimeEntryType } from '../../models/enums/TimeEntryType'
 import { TimeEntryModel } from '../../models/TimeEntryModel'
-import { timeService } from '../../services/time.service'
+import { timeService, dateTimeFormatService } from '../../services'
+
 export default {
   data() {
     return {
       currentTime: '',
       currentTimeStamp: null,
       isComingEntryAvailable: false,
-      isGoingEntryAvailable: false,
+      isGoingEntryAvailable: false
     }
   },
   created() {
@@ -71,21 +70,12 @@ export default {
     this.checkComingEntryAvailable()
   },
   methods: {
-    timeFormate(timeStamp) {
-      const hh =
-        new Date(timeStamp).getHours() < 10
-          ? '0' + new Date(timeStamp).getHours()
-          : new Date(timeStamp).getHours()
-      const mm =
-        new Date(timeStamp).getMinutes() < 10
-          ? '0' + new Date(timeStamp).getMinutes()
-          : new Date(timeStamp).getMinutes()
-
-      this.currentTime = `${hh}:${mm}`
-    },
     nowTimes() {
       this.currentTimeStamp = new Date()
-      this.timeFormate(this.currentTimeStamp)
+      this.currentTime = dateTimeFormatService.getTimeString(
+        this.currentTimeStamp.getHours(),
+        this.currentTimeStamp.getMinutes()
+      )
       setInterval(this.nowTimes, 30 * 1000)
     },
     createComingEntry() {
@@ -97,7 +87,7 @@ export default {
     createTimeEntry(timeEntryType) {
       const timeModel = new TimeEntryModel(this.currentTimeStamp, timeEntryType)
       timeService.createTimeEntry(timeModel).then(
-        (data) => {
+        data => {
           switch (timeEntryType) {
             case TimeEntryType.COMING:
               this.isComingEntryAvailable = true
@@ -106,8 +96,9 @@ export default {
               this.isGoingEntryAvailable = true
               break
           }
+          this.$emit('time-entry-created')
         },
-        (error) => {
+        error => {
           console.log(error)
         }
       )
@@ -118,7 +109,7 @@ export default {
         this.currentTimeStamp.getDate(),
         this.currentTimeStamp.getFullYear()
       )
-      entriesOfThisDay.then((e) => {
+      entriesOfThisDay.then(e => {
         if (e.entries && e.entries.length > 0) {
           for (var i = 0; i < e.entries.length; i++) {
             const currentItem = e.entries[i]
@@ -131,7 +122,7 @@ export default {
           }
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>
